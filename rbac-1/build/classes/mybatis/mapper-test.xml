@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.TestDao">
+    
+   <select id="queryAllTests" resultType="Test">
+      select * from tb_test
+   </select>
+	
+	<select id="queryAllTestsByUserId" resultType="Test">
+      select * from tb_test where creator=#{userId}
+   </select>
+   <select id="queryTestById" resultType="Test">
+      select * from tb_test where testId=#{testId}
+   </select>
+   <insert id="insertTest" useGeneratedKeys="true" keyProperty="testId"
+     parameterType="Test">
+      insert into tb_test(quesTypeName, grade, quesIds, submitAnswer, creator, createDate) 
+      values(#{quesTypeName}, #{grade}, #{quesIds}, #{submitAnswer}, #{creator}, #{createDate})
+   </insert>
+   <delete id="deleteTestById">
+   		delete from tb_test where testId = #{testId}
+   </delete>
+</mapper>

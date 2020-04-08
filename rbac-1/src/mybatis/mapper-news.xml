@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.NewsDao">
+    
+   <select id="queryAllNews" resultType="News">
+      select * from tb_news
+   </select>
+	
+	 <select id="queryNewsById" resultType="News">
+      select * from tb_news where newsId=#{newsId}
+   </select>
+   
+   <insert id="insertNews" useGeneratedKeys="true" keyProperty="newsId"
+     parameterType="News">
+      insert into tb_news(newsTitle, category, newsContent, creator, createDate) 
+      values(#{newsTitle}, #{category}, #{newsContent}, #{creator}, #{createDate})
+   </insert>
+   
+   <delete id="deleteNewsById">
+   		delete from tb_news where newsId = #{newsId}
+   </delete>
+   
+   <update id="updateNewsById">
+	   	update tb_news set 
+	   	newsTitle = #{newsTitle}, category = #{category}, newsContent = #{newsContent},
+	   	updater = #{updater}, updateDate = #{updateDate} 
+	   	where newsId = #{newsId}
+   </update>
+   
+   
+      
+<!--    <insert id="insertUserRoles"> -->
+<!--       insert into tb_user_role (userid,roleid) values -->
+      
+<!--       <foreach collection="roleids" item="roleid" separator=","> -->
+<!--          ( #{userid}, #{roleid} ) -->
+<!--       </foreach> -->
+   
+<!--    </insert> -->
+  
+<!--    <delete id="deleteUserRole"> -->
+<!--        delete from tb_user_role where userid=#{userid} and roleid in -->
+<!--        <foreach collection="roleids" item="roleid" separator="," open="(" close=")"> -->
+<!--            #{roleid} -->
+<!--        </foreach> -->
+<!--    </delete> -->
+   
+</mapper>

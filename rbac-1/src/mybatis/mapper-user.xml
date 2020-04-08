@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.UserDao">
+    
+   <select id="queryAllUser" resultType="User">
+      select * from tb_user
+   </select>
+   
+   <select id="login" parameterType="User" resultType="User">
+     select * from tb_user where username = #{userName} and password=#{password}
+   </select>
+	
+	 <select id="queryUserById" resultType="User">
+      select * from tb_user where userId=#{userId}
+   </select>
+   
+   <insert id="insertUserRoles">
+      insert into tb_user_role (userid,roleid) values
+      <foreach collection="roleids" item="roleid" separator=",">
+         ( #{userid}, #{roleid} )
+      </foreach>
+   </insert>
+   
+   <delete id="deleteUserRole">
+       delete from tb_user_role where userid=#{userid} and roleid in
+       <foreach collection="roleids" item="roleid" separator="," open="(" close=")">
+           #{roleid}
+       </foreach>
+   </delete>
+   
+   <insert id="insertUserAuths">
+      insert into tb_user_auth (userId,authId) values
+      <foreach collection="authIds" item="authId" separator=",">
+         ( #{userid}, #{authId} )
+      </foreach>
+   </insert>
+   
+   <delete id="deleteUserAuths">
+       delete from tb_user_auth where userId=#{userId} and authId in
+       <foreach collection="authIds" item="authId" separator="," open="(" close=")">
+           #{authId}
+       </foreach>
+   </delete>
+   
+   <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId"
+     parameterType="com.iotek.user.po.User">
+      insert into tb_user(username, password, userTrueName, creator, createDate) 
+      values(#{userName}, #{password}, #{userTrueName}, #{creator}, #{createDate})
+   </insert>
+   
+   <delete id="deleteUserById">
+   		delete from tb_user where userId = #{userId}
+   </delete>
+   
+   <update id="updateUserById">
+	   	update tb_user set userName = #{userName}, userTrueName = #{userTrueName},
+	   	password = #{password}, userState = #{userState}, 
+	   	updater = #{updater}, updateDate = #{updateDate} 
+	   	where userId = #{userId}
+   </update>
+   
+</mapper>

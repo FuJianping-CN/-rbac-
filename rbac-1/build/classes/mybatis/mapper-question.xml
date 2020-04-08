@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.QuestionDao">
+    
+   <select id="queryAllQuestion" resultType="Question">
+      select * from tb_question
+   </select>
+   
+   <select id="queryAllQuestionByType" resultType="Question">
+      select * from tb_question where quesType = #{quesType}
+   </select>
+	
+	 <select id="queryQuestionById" resultType="Question">
+      select * from tb_question where quesId=#{quesId}
+   </select>
+   
+   <insert id="insertQuestion" useGeneratedKeys="true" keyProperty="quesId"
+     parameterType="Question">
+      insert into tb_question(quesType, quesContent, optionA, optionB, 
+      optionC, optionD, quesAnswer, creator, createDate) 
+      values(#{quesType}, #{quesContent}, #{optionA},#{optionB}, 
+      #{optionC},#{optionD}, #{quesAnswer},#{creator}, #{createDate})
+   </insert>
+   
+   <delete id="deleteQuestionById">
+   		delete from tb_question where quesId = #{quesId}
+   </delete>
+   
+   <update id="updateQuestionById">
+	   	update tb_question set quesType = #{quesType},
+	   	quesContent = #{quesContent},optionA = #{optionA},
+	   	optionB = #{optionB},optionC = #{optionC},
+	   	optionD = #{optionD},quesAnswer = #{quesAnswer},
+	   	updater = #{updater}, updateDate = #{updateDate} 
+	   	where quesId = #{quesId}
+   </update>
+   
+   <select id="queryIdByQuesTypeId" parameterType="Integer" resultType="Integer">
+   	select quesId from tb_question where quesType = #{quesTypeId}
+   </select>
+   
+<!--    <delete id="deleteQuestionByQuesTypeId" parameterType="java.util.List"> -->
+<!--    	  delete from tb_question where quesId in -->
+<!--       <foreach collection="quesTypeIds" item="quesType" open="(" separator="," close=")" > -->
+<!-- 		#{quesType} -->
+<!-- 	  </foreach> -->
+<!-- 	</delete> -->
+	
+	<delete id="deleteQuestionByQuesTypeId" parameterType="java.util.List">
+		delete from tb_question where quesId in
+		<foreach collection="quesTypeIds" item="quesId" open="(" separator="," close=")">
+			#{quesId}
+		</foreach>
+	</delete>
+	
+	<select id="queryTenRanQuestionByType" resultType="Question">
+		select * from tb_question 
+		where quesType = #{quesTypeId} 
+		order by rand() limit 10
+	</select>
+	
+	<select id="queryQuestionByIds" resultType="Question">
+		select * from tb_question where quesId in 
+		<foreach collection="quesIds" item="quesId" open="(" separator="," close=")">
+			#{quesId}
+		</foreach>
+		order by field(quesId,
+		<foreach collection="quesIds" item="quesId" open="" separator="," close=")">
+			#{quesId}
+		</foreach>
+	</select>
+      
+<!--    <insert id="insertUserRoles"> -->
+<!--       insert into tb_user_role (userid,roleid) values -->
+      
+<!--       <foreach collection="roleids" item="roleid" separator=","> -->
+<!--          ( #{userid}, #{roleid} ) -->
+<!--       </foreach> -->
+   
+<!--    </insert> -->
+  
+<!--    <delete id="deleteUserRole"> -->
+<!--        delete from tb_user_role where userid=#{userid} and roleid in -->
+<!--        <foreach collection="roleids" item="roleid" separator="," open="(" close=")"> -->
+<!--            #{roleid} -->
+<!--        </foreach> -->
+<!--    </delete> -->
+   
+</mapper>

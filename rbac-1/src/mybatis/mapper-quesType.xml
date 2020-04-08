@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.QuesTypeDao">
+    
+   <select id="queryAllQuesType" resultType="QuesType">
+      select * from tb_questype
+   </select>
+	
+	 <select id="queryQuesTypeById" resultType="QuesType">
+      select * from tb_questype where quesTypeId=#{quesTypeId}
+   </select>
+   
+   <insert id="insertQuesType" useGeneratedKeys="true" keyProperty="quesTypeId"
+     parameterType="QuesType">
+      insert into tb_questype(quesTypeName, quesTypeContent, examTime, creator, createDate) 
+      values(#{quesTypeName},#{quesTypeContent}, #{examTime}, #{creator}, #{createDate})
+   </insert>
+   
+   <delete id="deleteQuesTypeById">
+   		delete from tb_questype where quesTypeId = #{quesTypeId}
+   </delete>
+   
+   <update id="updateQuesTypeById">
+	   	update tb_questype set quesTypeName = #{quesTypeName},
+	   	quesTypeContent = #{quesTypeContent},examTime = #{examTime},
+	   	updater = #{updater}, updateDate = #{updateDate} 
+	   	where quesTypeId = #{quesTypeId}
+   </update>
+   
+   
+      
+<!--    <insert id="insertUserRoles"> -->
+<!--       insert into tb_user_role (userid,roleid) values -->
+      
+<!--       <foreach collection="roleids" item="roleid" separator=","> -->
+<!--          ( #{userid}, #{roleid} ) -->
+<!--       </foreach> -->
+   
+<!--    </insert> -->
+  
+<!--    <delete id="deleteUserRole"> -->
+<!--        delete from tb_user_role where userid=#{userid} and roleid in -->
+<!--        <foreach collection="roleids" item="roleid" separator="," open="(" close=")"> -->
+<!--            #{roleid} -->
+<!--        </foreach> -->
+<!--    </delete> -->
+   
+</mapper>

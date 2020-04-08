@@ -1,0 +1,185 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+<meta charset="GB18030">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="${PATH}/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="${PATH}/css/font-awesome.min.css">
+<link rel="stylesheet" href="${PATH}/css/main.css">
+<link rel="stylesheet" href="${PATH}/css/doc.min.css">
+<style>
+.tree li {
+	list-style-type: none;
+	cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div>
+					<a class="navbar-brand" style="font-size: 32px;" href="#">考试管理系统
+						- 控制面板</a>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li style="padding-top: 8px;">
+						<div class="btn-group">
+							<button type="button"
+								class="btn btn-default btn-success dropdown-toggle"
+								data-toggle="dropdown">
+								<i class="glyphicon glyphicon-user"></i>${user.userName } <span
+									class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#"><i class="glyphicon glyphicon-cog"></i>
+										个人设置</a></li>
+								<li><a href="#"><i class="glyphicon glyphicon-comment"></i>
+										消息</a></li>
+								<li class="divider"></li>
+								<li><a href="index.html"><i
+										class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+							</ul>
+						</div>
+					</li>
+					<li style="margin-left: 10px; padding-top: 8px;">
+						<button type="button" class="btn btn-default btn-danger">
+							<span class="glyphicon glyphicon-question-sign"></span> 帮助
+						</button>
+					</li>
+				</ul>
+				<form class="navbar-form navbar-right">
+					<input type="text" class="form-control" placeholder="查询">
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3 col-md-2 sidebar">
+				<div class="tree">
+					<%@include file="/WEB-INF/jsp/common/menu.jsp"%>
+				</div>
+			</div>
+
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<ol class="breadcrumb">
+					<li><a href="#">权限管理</a></li>
+					<li><a href="#">用户维护</a></li>
+					<li class="active">新增用户</li>
+				</ol>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						表单数据
+						<div style="float: right; cursor: pointer;" data-toggle="modal"
+							data-target="#myModal">
+							<i class="glyphicon glyphicon-question-sign"></i>
+						</div>
+					</div>
+					<div class="panel-body">
+						<form role="form" id="addForm" action="${PATH }/user/addUser">
+							<div class="form-group">
+								<label for="exampleInputPassword1">用户名</label> <input
+									id="username" name="userName" type="text" class="form-control"
+									id="exampleInputPassword1" placeholder="请输入用户名">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">真实姓名</label> <input
+									id="userTrueName" name="userTrueName" type="text" class="form-control"
+									id="exampleInputPassword1" placeholder="请输入真实姓名">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">密码</label> <input
+									id="password" name="password" type="text" class="form-control"
+									id="exampleInputPassword1" placeholder="请输入密码">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">确认密码</label> <input
+									id="confirmPassword" type="text" class="form-control"
+									id="exampleInputPassword1" placeholder="请再次输入密码">
+							</div>
+							<button type="submit" 
+								class="btn btn-success">
+								<i class="glyphicon glyphicon-plus"></i> 确认新增
+							</button>
+							<button type="reset" class="btn btn-danger">
+								<i class="glyphicon glyphicon-refresh"></i> 重置
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script src="${PATH}/jquery/jquery-2.1.1.min.js"></script>
+	<script src="${PATH}/bootstrap/js/bootstrap.min.js"></script>
+	<script src="${PATH}/script/docs.min.js"></script>
+	<script src="jquery/jquery-2.1.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+	<script type="text/javascript">
+		function addUser() {
+			alert("addUser...")
+			var username = $('#username').val();
+			var userTrueName = $('#userTrueName').val();
+			var password = $('#password').val();
+			var confirmPassword = $('#confirmPassword').val();
+			$.ajax({
+				type : "POST",
+				url : "user/addUser",
+				data : {
+					"userName" : username,
+					"userTrueName" : userTrueName,
+					"password" : password
+				},
+// 				beforeSend : function() {
+// 					loadingIndex = layer.msg("数据正在处理中,请输入", {
+// 						icon : 16
+// 					});
+// 				},
+				success : function(result) { //接收返回数据
+					alert(result+"****")
+					layer.close(loadingIndex); //关闭层
+					if (result.success) {
+						location.href = "user/index";
+					} else {
+						alert("发生未知错误，用户添加失败,请重新输入")
+// 						layer.msg("发生未知错误，用户添加失败,请重新输入", {
+// 							timer : 1000,
+// 							icon : 5,
+// 							shift : 6
+// 						}, function() {
+// 						});
+					}
+				}
+			});
+		}
+
+		$(function() {
+			$(".list-group-item").click(function() {
+				if ($(this).find("ul")) {
+					$(this).toggleClass("tree-closed");
+					if ($(this).hasClass("tree-closed")) {
+						$("ul", this).hide("fast");
+					} else {
+						$("ul", this).show("fast");
+					}
+				}
+			});
+		});
+	</script>
+</body>
+</html>

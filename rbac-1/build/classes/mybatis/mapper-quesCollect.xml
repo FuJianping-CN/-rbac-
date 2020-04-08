@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.QuesCollectDao">
+    
+   <select id="queryAllQuesCollects" resultType="QuesCollect">
+      select * from tb_quescollect
+   </select>
+	
+	<select id="queryAllQuesCollectsByUserId" resultType="QuesCollect">
+      select * from tb_quescollect where creator=#{userId}
+   </select>
+   <select id="queryQuesCollectById" resultType="QuesCollect">
+      select * from tb_quescollect where collectId=#{collectId}
+   </select>
+   <insert id="insertQuesCollect" useGeneratedKeys="true" keyProperty="collectId"
+     parameterType="QuesCollect">
+      insert into tb_quescollect(quesTypeName, quesId, quesContent, creator, createDate) 
+      values(#{quesTypeName}, #{quesId}, #{quesContent}, #{creator}, #{createDate})
+   </insert>
+   <delete id="deleteQuesCollectById">
+   		delete from tb_quescollect where collectId = #{collectId}
+   </delete>
+   <select id="queryQuesCollectByConditions" resultType="QuesCollect">
+      select collectId from tb_quescollect 
+      where 
+      creator = #{creator}
+      and quesTypeName = #{quesTypeName}
+      and quesId = #{quesId}
+   </select>
+</mapper>

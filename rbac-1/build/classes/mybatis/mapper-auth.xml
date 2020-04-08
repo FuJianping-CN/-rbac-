@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.AuthDao">
+
+	<select id="queryChildAuths" parameterType="int" resultType="Auth">
+		SELECT * FROM tb_auth WHERE authParentRoot =#{authParentRoot}
+	</select>
+
+	<select id="queryAllAuths" resultType="Auth">
+		select * from tb_auth
+	</select>
+
+	<select id="queryAuthByUser" resultType="Auth" parameterType="User">
+		SELECT * FROM tb_auth WHERE authid
+		IN(SELECT authid FROM tb_role_auth WHERE roleid
+		IN( SELECT roleid FROM tb_user_role WHERE userid=#{userId}));
+	</select>
+	<!-- <select id="queryAuthByUser" resultType="Auth" parameterType="User"> 
+		SELECT * FROM tb_auth WHERE id IN(SELECT authid FROM tb_role_auth WHERE roleid 
+		IN( SELECT roleid FROM tb_user_role WHERE userid=#{userId})); </select> -->
+
+	<insert id="insertAuth" useGeneratedKeys="true" keyProperty="authId"
+		parameterType="Auth">
+		insert into tb_auth(authName, authUrl, authParentRoot, authIsRoot, creator,
+		createDate)
+		values(#{authName}, #{authUrl}, #{authParentRoot}, #{authIsRoot}, #{creator},
+		#{createDate})
+	</insert>
+
+	<delete id="deleteAuthById">
+		delete from tb_auth where authId = #{authId}
+	</delete>
+
+	<select id="queryAuthById" resultType="Auth">
+		select * from tb_auth where authId = #{authId}
+	</select>
+
+	<update id="updateAuthById">
+		update tb_auth set authName = #{authName}, authUrl = #{authUrl},
+		authParentRoot = #{authParentRoot}, authIsRoot = #{authIsRoot},
+		updater = #{updater}, updateDate = #{updateDate}
+		where authId = #{authId}
+	</update>
+
+<!-- 	查找该角色已被授权的权限 -->
+	<select id="queryAuthsByRoleId" resultType="Auth">
+		select * from tb_auth
+		where authId in (select authId from tb_role_auth where roleId = #{roleId})
+	</select>
+<!-- 	查找该角色未被授权的权限 -->
+	<select id="queryUnAuthsByRoleId" resultType="Auth">
+		select * from tb_auth
+		where authId not in (select authId from tb_role_auth where roleId =
+		#{roleId})
+	</select>
+
+	<insert id="insertAuthForRole">
+		insert into tb_role_auth(roleId, authId) values(#{roleId}, #{authId})
+	</insert>
+	
+	<select id="queryRootAuths" resultType="Auth">
+		select * from tb_auth where authIsRoot = "是"
+	</select>
+</mapper>

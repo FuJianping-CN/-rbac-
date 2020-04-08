@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.ErrorQuesDao">
+
+	<sql id="errorQuesFields">
+		errorId,quesId,submitAnswer,creator,createDate
+	</sql>
+    
+   <select id="queryErrorQuess" resultType="ErrorQues">
+      select 
+      <include refid="errorQuesFields"></include>
+       from tb_errorques
+   </select>
+	
+	<select id="queryErrorQuesctsByUserId" resultType="ErrorQues">
+      select <include refid="errorQuesFields"></include>
+       from tb_errorques where creator=#{userId}
+   </select>
+   <select id="queryErrorQuesById" resultType="ErrorQues">
+      select <include refid="errorQuesFields"></include>
+       from tb_errorques where errorId=#{errorId}
+   </select>
+   
+   <insert id="insertErrorQues">
+      insert into tb_errorques (quesId, submitAnswer, creator, createDate) values
+      
+      <foreach collection="errorQuess" item="errorQues" separator=",">
+         ( #{errorQues.quesId}, #{errorQues.submitAnswer}, #{errorQues.creator}, #{errorQues.createDate} )
+      </foreach>
+   
+   </insert>
+   
+<!--    <insert id="insertErrorQues" useGeneratedKeys="true" keyProperty="errorId" -->
+<!--      parameterType="ErrorQues"> -->
+<!--       insert into tb_errorques(quesTypeName, quesId, quesContent, creator, createDate)  -->
+<!--       values(#{quesTypeName}, #{quesId}, #{quesContent}, #{creator}, #{createDate}) -->
+<!--    </insert> -->
+   <delete id="deleteErrorQuesById">
+   		delete from tb_errorques where errorId = #{errorId}
+   </delete>
+   <select id="queryErrorQuesByConditions" resultType="ErrorQues">
+      select collectId from tb_errorques 
+      where 
+      creator = #{creator}
+      and quesId = #{quesId}
+   </select>
+</mapper>

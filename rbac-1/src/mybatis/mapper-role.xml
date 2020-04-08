@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotek.user.dao.RoleDao">
+    
+   <select id="queryRoleAll" resultType="Role">
+      select * from tb_role
+   </select>
+   
+   <insert id="insertRole" useGeneratedKeys="true" keyProperty="roleId" parameterType="Role">
+      insert into tb_role(roleName, roleContent, creator, createDate) 
+      values(#{roleName}, #{roleContent}, #{creator}, #{createDate})
+   </insert>
+    
+   <delete id="deleteRoleById">
+   	delete from tb_role where roleId = #{roleId}
+   </delete>
+  
+  <select id="queryRoleById" resultType="Role">
+   	select * from tb_role where roleId = #{roleId}
+   </select>
+   
+   <update id="updateRoleById">
+   	update tb_role set roleName = #{roleName}, roleContent = #{roleContent}, 
+   	updater = #{updater}, updateDate = #{updateDate}
+   	where roleId = #{roleId}
+   </update>
+   
+<!--    给一个角色添加多个权限 -->
+   <insert id="addAuthsForRoleByRoleId">
+      insert into tb_role_auth (roleId, authId) values
+      <foreach collection="authIds" item="authId" separator=",">
+         ( #{roleId}, #{authId} )
+      </foreach>
+   </insert>
+   
+   <!--    给多个角色添加根结点权限 -->
+   <insert id="addRootAuthForRoles">
+      insert into tb_role_auth (roleId, authId) values
+      <foreach collection="roleIds" item="roleId" separator=",">
+         ( #{roleId}, #{authId} )
+      </foreach>
+   </insert>
+   
+   <delete id="deleteAuthsForRoleByRoleId">
+       delete from tb_role_auth where roleId = #{roleId} and authId in
+       <foreach collection="authIds" item="authId" separator="," open="(" close=")">
+           #{authId}
+       </foreach>
+   </delete>
+    
+   <select id="queryAuthsByRoleIds" resultType="int">
+       select distinct(authId) from tb_role_auth where roleId in
+       <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+           #{roleId}
+       </foreach>
+   </select>
+</mapper>
